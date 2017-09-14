@@ -37,6 +37,17 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    var lastArr;
+    if (n === undefined) {
+      lastArr = array[array.length-1];
+    } else if (n === 0){
+      lastArr = [];
+    } else if (n > array.length) {
+      lastArr = array;
+    } else {
+      lastArr = array.slice(array.length-n, array.length);
+    }
+    return lastArr;
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -45,6 +56,18 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
+    // if collection is an array
+    if (Array.isArray(collection)){
+      for (var i = 0; i < collection.length; i+=1){
+        iterator(collection[i], i, collection);
+      }
+    } else {
+      // collection is an object
+      for (var k in collection){
+        iterator(collection[k], k, collection);
+      }
+    return collection;
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -66,12 +89,28 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var newCollection = [];
+    for (var i = 0; i < collection.length; i += 1){
+      if (test(collection[i])){
+        newCollection.push(collection[i]);
+      }
+    }
+    return newCollection;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    //var filtered = ._filter(collection, test);
+    //console.log(passed);
+    /*var rejected = [];
+      for (var i = 0; i < collection.length; i += 1){
+      if (passed[i] !== collection[i]){
+        rejected.push(collection[i]);
+      }
+    }*/
+    //return rejected;
   };
 
   // Produce a duplicate-free version of the array.
