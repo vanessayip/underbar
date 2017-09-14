@@ -7,6 +7,7 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
+    return val;
   };
 
   /**
@@ -102,19 +103,52 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    //var filtered = ._filter(collection, test);
-    //console.log(passed);
-    /*var rejected = [];
-      for (var i = 0; i < collection.length; i += 1){
-      if (passed[i] !== collection[i]){
+    var passed = _.filter(collection, test);
+    var rejected = [];
+    var i; // index counter for collection
+    var j = 0; // index counter for passed
+    
+    for (i = 0; i < collection.length; i += 1){
+      if (collection[i] !== passed[j]){
         rejected.push(collection[i]);
+      } else {
+        j += 1;
       }
-    }*/
-    //return rejected;
+    }
+    return rejected;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    var newArray = [];
+    var isDuplicate = false;
+    var seen;
+
+    for (var i = 0; i < array.length; i += 1){
+      var j = 0;
+      var value = iterator ? iterator(array[i], i, array) : array[i];
+      
+      if (isSorted) {
+        if (value === seen){
+          isDuplicate = true;
+        }
+        seen = value;
+      } else {
+        while (!isDuplicate && j < newArray.length){
+          if (value === newArray[j]){
+            isDuplicate = true;
+          }
+          j += 1;
+        }
+      }
+      
+
+      if (isDuplicate === false) {
+        newArray.push(array[i]);
+      }
+      isDuplicate = false;
+    }
+    return newArray;
   };
 
 
@@ -123,6 +157,20 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var newCollection = Array(collection.length);
+
+    // if collection is an array
+    if (Array.isArray(collection)){
+      for (var i = 0; i < collection.length; i+=1){
+        newCollection[i] = iterator(collection[i], i, collection);
+      }
+    } else {
+      // collection is an object
+      for (var k in collection){
+        newCollection[i] = iterator(collection[k], k, collection);
+      }
+    }
+    return newCollection;
   };
 
   /*
@@ -164,8 +212,38 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    var i = 0; // collection index counter
+
+    if (Array.isArray(collection)){
+      if (accumulator === undefined){
+        accumulator = collection[0];
+        i += 1;
+      }
+
+      for (i; i < collection.length; i += 1){
+        accumulator = iterator(accumulator, collection[i], i, collection);
+      }
+    } else { // collection is an object
+      var values = Object.values(collection);
+      var keys = Object.keys(collection);
+
+      if (accumulator === undefined){
+        accumulator = values[0];
+        i += 1;
+      }
+      
+      for (i; i < values.length; i += 1){
+        accumulator = iterator(accumulator, values[i], keys[i], collection);
+      }
+    }
+    return accumulator;
   };
 
+
+   /* var test = {a: 1, b: 2, c: 3};
+    console.log(_.reduce(test, function(accumulator, item) { return accumulator + item}, 10));
+    console.log(_.reduce(test, function(accumulator, item) { return accumulator + item}));
+*/
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
