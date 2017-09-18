@@ -377,6 +377,25 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var cache = {};
+    //console.log(arguments)
+    //var wutisthis = [].slice.call(arguments);
+    //console.log(wutisthis)
+    //console.log('LOOK AT ^^^^^^^^^^^^')
+    // console.log('key: ' + key);
+    var funcWithCache = function(){
+      // debugger
+      //console.log(arguments)
+      var key = JSON.stringify([].slice.call(arguments))
+      // console.log(key)
+      // console.log(!cache.hasOwnProperty(key))
+      if (!cache.hasOwnProperty(key)){
+        var results = func.apply(null, arguments);
+        cache[key] = results;
+      } 
+      return cache[key];
+    }
+    return funcWithCache;
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -386,6 +405,12 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = [].slice.call(arguments,1);
+    var sliced = args.slice(1);
+    //console.log(sliced);
+    return setTimeout(function(){
+      return func.apply(null,sliced);
+    }, wait);
   };
 
 
@@ -400,6 +425,25 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var shuffledArray = [];
+    var copyArray = array.slice();
+    // console.log('copyArray: ' + copyArray);
+    for (var i = copyArray.length-1; i >=0; i--){
+      // console.log('i: ' + i);
+      var rand = Math.floor(Math.random()*(i+1));
+      // console.log('rand: ' + rand);
+      if (rand !== i) {
+        shuffledArray[i] = copyArray[rand];
+        copyArray[rand] = shuffledArray[i];
+        copyArray[i] = shuffledArray[rand];
+        // console.log('shuffledArray[i] = copyArray[rand]: ' + shuffledArray[i]);
+      }
+
+      shuffledArray[rand] = copyArray[i];
+      // console.log('shuffledArray[rand] = copyArray[i]: ' + shuffledArray[rand]);
+    }
+    // console.log('shuffledArray: ' + shuffledArray);
+    return shuffledArray;
   };
 
 
