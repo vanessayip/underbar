@@ -378,16 +378,11 @@
   // instead if possible.
   _.memoize = function(func) {
     var cache = {};
-    //console.log(arguments)
-    //var wutisthis = [].slice.call(arguments);
-    //console.log(wutisthis)
-    //console.log('LOOK AT ^^^^^^^^^^^^')
-    // console.log('key: ' + key);
+
     var funcWithCache = function(){
-      // debugger
-      //console.log(arguments)
-      var key = JSON.stringify([].slice.call(arguments))
-      // console.log(key)
+      //arr.toString() doesn't work because need to keep the brackets to differentiate it is an array
+      var key = JSON.stringify([].slice.call(arguments));
+      
       // console.log(!cache.hasOwnProperty(key))
       if (!cache.hasOwnProperty(key)){
         var results = func.apply(null, arguments);
