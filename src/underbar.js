@@ -427,17 +427,17 @@
       // console.log('i: ' + i);
       var rand = Math.floor(Math.random()*(i+1));
       // console.log('rand: ' + rand);
-      if (rand !== i) {
+      //if (rand !== i) {
         shuffledArray[i] = copyArray[rand];
-        copyArray[rand] = shuffledArray[i];
-        copyArray[i] = shuffledArray[rand];
-        // console.log('shuffledArray[i] = copyArray[rand]: ' + shuffledArray[i]);
-      }
+        copyArray[rand] = copyArray[i];
+        //copyArray[i] = shuffledArray[rand];
+         console.log('shuffledArray[i] = copyArray[rand]: ' + shuffledArray[i]);
+      //}
 
-      shuffledArray[rand] = copyArray[i];
+      //shuffledArray[rand] = copyArray[i];
       // console.log('shuffledArray[rand] = copyArray[i]: ' + shuffledArray[rand]);
     }
-    // console.log('shuffledArray: ' + shuffledArray);
+     console.log('shuffledArray: ' + shuffledArray);
     return shuffledArray;
   };
 
